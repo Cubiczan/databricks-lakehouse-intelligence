@@ -28,7 +28,7 @@ This project processes real mining company data — production volumes, all-in s
 - **Unity Catalog Governance**: 5 managed schemas under the `workspace` catalog with role-based access controls
 - **9 Delta Tables**: 3 per medallion layer — companies, production records, financials → signal scores, cross-domain intelligence
 - **MLflow Experiment Tracking**: 8 logged runs across 4 weight configurations (baseline, cost_focused, growth_focused, esg_focused) with signal score metrics
-- **Serverless-Compatible Notebooks**: All 6 notebooks use scikit-learn instead of pyspark.ml for Spark Connect compatibility
+- **Serverless-Compatible Notebooks**: No `pyspark.ml` in any of the 6 notebooks (VectorAssembler is not whitelisted on Serverless); ML-style steps use pandas via `.toPandas()` with MLflow tracking (`notebooks/04_mlflow_experiments.py`)
 - **Databricks Jobs Workflow**: 5-task chain with dependency ordering, scheduled daily at 6 AM ET (paused, ready to activate)
 - **SQL Dashboard Queries**: Top signals, AISC benchmarks, signal distribution, and cross-domain analytics
 
@@ -126,6 +126,8 @@ Composite = Grade x 0.20 + Cost x 0.25 + Production x 0.20 + Growth x 0.20 + ESG
 Signal Bands:  ≥80 Strong Buy | ≥65 Buy | ≥50 Hold | ≥35 Sell | <35 Strong Sell
 ```
 
+Implemented in `notebooks/03_gold_aggregate.py` (deployed scoring — weights verified verbatim in the composite expression). The library copy `src/lakehouse/signal_engine.py` defaults to slightly different weights (grade 0.25, growth 0.15).
+
 | Dimension | Data Source | Scoring Logic |
 |---|---|---|
 | **Grade** | Silver production records | Based on AISC thresholds ($3K-$7K/tonne) |
@@ -151,7 +153,7 @@ Signal Bands:  ≥80 Strong Buy | ≥65 Buy | ≥50 Hold | ≥35 Sell | <35 Stro
 
 All notebooks are designed for **Databricks Serverless compute** (Spark Connect):
 - Uses `df.write.mode("overwrite").saveAsTable()` instead of `writeTo().createOrReplace()` (Spark Connect compatibility)
-- Uses `scikit-learn` instead of `pyspark.ml` (VectorAssembler is not whitelisted on Serverless)
+- No `pyspark.ml` anywhere in the repo (VectorAssembler is not whitelisted on Serverless); the ML-style step uses `.toPandas()` + pandas in `notebooks/04_mlflow_experiments.py`
 - Sets `mlflow.set_tracking_uri("databricks")` and `mlflow.set_registry_uri("databricks-uc")` explicitly
 - Uses `.toPandas()` for ML operations to avoid Py4J restrictions
 
@@ -213,7 +215,7 @@ done
 | **Catalog** | Unity Catalog (`workspace` catalog, `databricks-uc` registry) |
 | **Storage** | Delta Lake (managed tables, ACID transactions) |
 | **ML Tracking** | MLflow (experiment tracking, metric logging) |
-| **ML Library** | scikit-learn (Serverless-compatible, no Py4J) |
+| **ML Library** | pandas + MLflow (no `pyspark.ml` — Serverless/Spark Connect compatible) |
 | **Language** | Python 3.11 / PySpark / SQL |
 | **API** | Databricks REST API v2.0 (workspace) + v2.1 (jobs, Unity Catalog, MLflow) |
 | **Visualization** | SQL analytics via Serverless SQL Warehouse |
