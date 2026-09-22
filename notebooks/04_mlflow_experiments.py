@@ -1,5 +1,10 @@
 # Databricks notebook source
 # MLflow - Signal Score Experiment Tracking (Serverless Compatible)
+#
+# Illustrative metrics: the avg/max/min scores logged below are fixed demonstration values
+# logged verbatim for each weight configuration — they are NOT computed aggregates
+# of the loaded table. Compute per-configuration aggregates from the gold table
+# before treating them as measurements.
 import mlflow
 import pandas as pd
 from pyspark.sql.functions import *
