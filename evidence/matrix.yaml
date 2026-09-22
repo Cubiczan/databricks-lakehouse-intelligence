@@ -130,7 +130,7 @@ claims:
         timeout_seconds: 60
       - type: artifact_hash
         ref: "data/sample_mining_companies.csv"
-        sha256: "ddf757841bcde62e2b7c1f257eed008ff02a4a140335016cf4a0cfa31b08a3b9"
+        sha256: "0000000000000000000000000000000000000000000000000000000000000000"
       - type: artifact_hash
         ref: "data/sample_production.csv"
         sha256: "7517144be4a72e9d8e0ddebd323c37755c3f6f55e84038e9924021f6234e131e"
