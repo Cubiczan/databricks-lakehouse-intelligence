@@ -148,6 +148,16 @@ Implemented in `notebooks/03_gold_aggregate.py` (deployed scoring — weights ve
 | 03 | `03_gold_aggregate.py` | Signal score computation | 5-dimension weighted scoring, cross-domain intelligence join |
 | 04 | `04_mlflow_experiments.py` | MLflow experiment tracking | 4 weight configurations with metric logging |
 | 05 | `05_dashboard_sql.py` | SQL analytics queries | Top signals, AISC benchmarks, distribution, cross-domain |
+| 06 | `06_quality_manifest.py` | Run evidence manifest | Source snapshots, schema hash, duplicate-key checks and job task values |
+
+## Run Evidence
+
+Each pipeline run can now emit a deterministic source manifest containing the
+dataset, source system, run ID, row count, schema hash, input hash and blocking
+quality findings. The pure-Python helper is in `src/lakehouse/provenance.py`
+and is safe to unit test outside Spark. The Databricks notebook publishes the
+manifest through task values so downstream Gold and MLflow tasks can refuse to
+promote a run with blocking findings.
 
 ### Serverless Compatibility Notes
 
