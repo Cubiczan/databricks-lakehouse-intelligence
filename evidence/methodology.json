@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "deployed": {
+    "notebook": "notebooks/03_gold_aggregate.py",
+    "composite_weights": {
+      "grade": 0.2,
+      "cost": 0.25,
+      "production": 0.2,
+      "growth": 0.2,
+      "esg": 0.15
+    },
+    "signal_band_thresholds": {
+      "strong_buy": 80,
+      "buy": 65,
+      "hold": 50,
+      "sell": 35
+    },
+    "signal_bands": {
+      "strong_buy": "Strong Buy",
+      "buy": "Buy",
+      "hold": "Hold",
+      "sell": "Sell",
+      "strong_sell": "Strong Sell"
+    }
+  },
+  "library": {
+    "module": "src/lakehouse/signal_engine.py",
+    "default_weights": {
+      "grade": 0.25,
+      "cost": 0.25,
+      "production": 0.2,
+      "growth": 0.15,
+      "esg": 0.15
+    },
+    "tier_thresholds": {
+      "A": 80,
+      "B": 65,
+      "C": 50
+    }
+  }
+}
